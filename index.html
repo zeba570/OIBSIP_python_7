@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NeonChat — Real-Time Messenger</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+ 
+<!-- AUTH SCREEN -->
+<div class="auth-screen" id="authScreen">
+  <div class="auth-bg">
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
+  </div>
+  <div class="auth-card">
+    <div class="logo">
+      <span class="logo-icon">⚡</span>
+      <span class="logo-text">NeonChat</span>
+    </div>
+    <p class="auth-sub">A next-gen real-time messenger</p>
+ 
+    <div class="tabs">
+      <button class="tab active" id="loginTab" onclick="switchTab('login')">Sign In</button>
+      <button class="tab" id="registerTab" onclick="switchTab('register')">Register</button>
+    </div>
+ 
+    <!-- Login Form -->
+    <div id="loginForm" class="auth-form">
+      <div class="input-group">
+        <i class="fa fa-user"></i>
+        <input type="text" id="loginUsername" placeholder="Username" />
+      </div>
+      <div class="input-group">
+        <i class="fa fa-lock"></i>
+        <input type="password" id="loginPassword" placeholder="Password" />
+      </div>
+      <button class="btn-primary" onclick="login()">Sign In</button>
+    </div>
+ 
+    <!-- Register Form -->
+    <div id="registerForm" class="auth-form hidden">
+      <div class="input-group">
+        <i class="fa fa-id-badge"></i>
+        <input type="text" id="regName" placeholder="Display Name" />
+      </div>
+      <div class="input-group">
+        <i class="fa fa-user"></i>
+        <input type="text" id="regUsername" placeholder="Username" />
+      </div>
+      <div class="input-group">
+        <i class="fa fa-lock"></i>
+        <input type="password" id="regPassword" placeholder="Password" />
+      </div>
+      <div class="avatar-picker">
+        <p>Choose Avatar:</p>
+        <div class="avatars">
+          <span class="avatar-opt selected" onclick="selectAvatar(this,'🐉')">🐉</span>
+          <span class="avatar-opt" onclick="selectAvatar(this,'🦋')">🦋</span>
+          <span class="avatar-opt" onclick="selectAvatar(this,'🌊')">🌊</span>
+          <span class="avatar-opt" onclick="selectAvatar(this,'🔥')">🔥</span>
+          <span class="avatar-opt" onclick="selectAvatar(this,'🌙')">🌙</span>
+          <span class="avatar-opt" onclick="selectAvatar(this,'⚡')">⚡</span>
+          <span class="avatar-opt" onclick="selectAvatar(this,'🎭')">🎭</span>
+          <span class="avatar-opt" onclick="selectAvatar(this,'🚀')">🚀</span>
+        </div>
+      </div>
+      <button class="btn-primary" onclick="register()">Create Account</button>
+    </div>
+ 
+    <p class="auth-error hidden" id="authError"></p>
+  </div>
+</div>
+ 
+<!-- MAIN APP -->
+<div class="app hidden" id="app">
+ 
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="user-info" id="currentUserInfo"></div>
+      <div class="header-actions">
+        <button class="icon-btn" title="Settings" onclick="toggleSettings()"><i class="fa fa-cog"></i></button>
+        <button class="icon-btn" title="Logout" onclick="logout()"><i class="fa fa-sign-out-alt"></i></button>
+      </div>
+    </div>
+ 
+    <div class="search-bar">
+      <i class="fa fa-search"></i>
+      <input type="text" placeholder="Search rooms or users..." id="searchInput" oninput="filterRooms()" />
+    </div>
+ 
+    <div class="rooms-section">
+      <div class="section-header">
+        <span>Chat Rooms</span>
+        <button class="icon-btn small" onclick="showCreateRoom()" title="New Room"><i class="fa fa-plus"></i></button>
+      </div>
+      <div class="room-list" id="roomList"></div>
+    </div>
+ 
+    <div class="online-section">
+      <div class="section-header"><span>Online Users</span></div>
+      <div class="online-list" id="onlineList"></div>
+    </div>
+  </aside>
+ 
+  <!-- MAIN CHAT AREA -->
+  <main class="chat-area">
+    <!-- Welcome Screen -->
+    <div class="welcome-screen" id="welcomeScreen">
+      <div class="welcome-content">
+        <div class="welcome-icon">⚡</div>
+        <h2>Welcome to NeonChat</h2>
+        <p>Select a room or start a direct message to begin chatting</p>
+      </div>
+    </div>
+ 
+    <!-- Chat Window -->
+    <div class="chat-window hidden" id="chatWindow">
+      <div class="chat-header" id="chatHeader">
+        <div class="chat-header-info">
+          <button class="icon-btn mobile-back" onclick="closeChatMobile()"><i class="fa fa-arrow-left"></i></button>
+          <div class="chat-room-avatar" id="chatRoomAvatar"></div>
+          <div>
+            <div class="chat-room-name" id="chatRoomName"></div>
+            <div class="chat-room-status" id="chatRoomStatus"></div>
+          </div>
+        </div>
+        <div class="chat-header-actions">
+          <button class="icon-btn" title="Search messages" onclick="toggleMsgSearch()"><i class="fa fa-search"></i></button>
+          <button class="icon-btn" title="Room info" onclick="toggleRoomInfo()"><i class="fa fa-info-circle"></i></button>
+          <button class="icon-btn" title="Video call (demo)" onclick="demoCall()"><i class="fa fa-video"></i></button>
+        </div>
+      </div>
+ 
+      <!-- Message Search Bar -->
+      <div class="msg-search-bar hidden" id="msgSearchBar">
+        <i class="fa fa-search"></i>
+        <input type="text" placeholder="Search messages..." id="msgSearchInput" oninput="searchMessages()"/>
+        <button onclick="closeMsgSearch()"><i class="fa fa-times"></i></button>
+      </div>
+ 
+      <div class="messages-container" id="messagesContainer">
+        <div class="messages-list" id="messagesList"></div>
+      </div>
+ 
+      <!-- Typing indicator -->
+      <div class="typing-indicator hidden" id="typingIndicator">
+        <div class="typing-dots"><span></span><span></span><span></span></div>
+        <span id="typingText">Someone is typing...</span>
+      </div>
+ 
+      <!-- Emoji Picker -->
+      <div class="emoji-picker hidden" id="emojiPicker"></div>
+ 
+      <!-- Reply Preview -->
+      <div class="reply-preview hidden" id="replyPreview">
+        <div class="reply-info">
+          <i class="fa fa-reply"></i>
+          <span id="replyText"></span>
+        </div>
+        <button onclick="cancelReply()"><i class="fa fa-times"></i></button>
+      </div>
+ 
+      <!-- Message Input -->
+      <div class="message-input-area">
+        <div class="input-actions-left">
+          <button class="icon-btn" title="Emoji" onclick="toggleEmojiPicker()"><i class="fa fa-smile"></i></button>
+          <label class="icon-btn" title="Attach file">
+            <i class="fa fa-paperclip"></i>
+            <input type="file" id="fileInput" multiple hidden onchange="handleFileAttach(event)"/>
+          </label>
+          <label class="icon-btn" title="Send image">
+            <i class="fa fa-image"></i>
+            <input type="file" id="imageInput" accept="image/*" hidden onchange="handleImageAttach(event)"/>
+          </label>
+        </div>
+        <div class="input-wrapper">
+          <textarea id="messageInput" placeholder="Type a message..." rows="1"
+            oninput="handleTyping()" onkeydown="handleKeyDown(event)"></textarea>
+        </div>
+        <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+          <i class="fa fa-paper-plane"></i>
+        </button>
+      </div>
+    </div>
+  </main>
+ 
+  <!-- ROOM INFO PANEL -->
+  <div class="room-info-panel hidden" id="roomInfoPanel">
+    <div class="panel-header">
+      <h3>Room Info</h3>
+      <button class="icon-btn" onclick="toggleRoomInfo()"><i class="fa fa-times"></i></button>
+    </div>
+    <div class="panel-body" id="roomInfoBody"></div>
+  </div>
+ 
+</div>
+ 
+<!-- CREATE ROOM MODAL -->
+<div class="modal-overlay hidden" id="createRoomModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Create Room</h3>
+      <button onclick="hideCreateRoom()"><i class="fa fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="input-group">
+        <i class="fa fa-hashtag"></i>
+        <input type="text" id="roomName" placeholder="Room name" />
+      </div>
+      <div class="input-group">
+        <i class="fa fa-align-left"></i>
+        <input type="text" id="roomDesc" placeholder="Description (optional)" />
+      </div>
+      <div class="room-type-picker">
+        <label><input type="radio" name="roomType" value="public" checked /> 🌐 Public</label>
+        <label><input type="radio" name="roomType" value="private" /> 🔒 Private</label>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="hideCreateRoom()">Cancel</button>
+      <button class="btn-primary" onclick="createRoom()">Create</button>
+    </div>
+  </div>
+</div>
+ 
+<!-- SETTINGS MODAL -->
+<div class="modal-overlay hidden" id="settingsModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Settings</h3>
+      <button onclick="toggleSettings()"><i class="fa fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="setting-row">
+        <span>Theme</span>
+        <div class="theme-options">
+          <button class="theme-btn active" onclick="setTheme('dark',this)">Dark</button>
+          <button class="theme-btn" onclick="setTheme('light',this)">Light</button>
+          <button class="theme-btn" onclick="setTheme('midnight',this)">Midnight</button>
+        </div>
+      </div>
+      <div class="setting-row">
+        <span>Accent Color</span>
+        <div class="color-options">
+          <div class="color-dot" style="background:#00f5ff" onclick="setAccent('#00f5ff','#0070ff',this)"></div>
+          <div class="color-dot" style="background:#ff6b6b" onclick="setAccent('#ff6b6b','#ee5a24',this)"></div>
+          <div class="color-dot" style="background:#a29bfe" onclick="setAccent('#a29bfe','#6c5ce7',this)"></div>
+          <div class="color-dot" style="background:#00b894" onclick="setAccent('#00b894','#00cec9',this)"></div>
+          <div class="color-dot" style="background:#fdcb6e" onclick="setAccent('#fdcb6e','#e17055',this)"></div>
+        </div>
+      </div>
+      <div class="setting-row">
+        <span>Notifications</span>
+        <label class="toggle">
+          <input type="checkbox" id="notifToggle" checked onchange="toggleNotifications(this)"/>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <div class="setting-row">
+        <span>Message Sound</span>
+        <label class="toggle">
+          <input type="checkbox" id="soundToggle" checked />
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+<!-- NOTIFICATION TOAST -->
+<div class="toast-container" id="toastContainer"></div>
+ 
+<!-- CALL DEMO OVERLAY -->
+<div class="call-overlay hidden" id="callOverlay">
+  <div class="call-content">
+    <div class="call-avatar">📹</div>
+    <div class="call-name" id="callName">Video Call</div>
+    <div class="call-status">Connecting...</div>
+    <div class="call-actions">
+      <button class="call-btn mute"><i class="fa fa-microphone-slash"></i></button>
+      <button class="call-btn end" onclick="endCall()"><i class="fa fa-phone-slash"></i></button>
+      <button class="call-btn video"><i class="fa fa-video"></i></button>
+    </div>
+  </div>
+</div>
+ 
+<script src="js/emoji.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/rooms.js"></script>
+<script src="js/messages.js"></script>
+<script src="js/notifications.js"></script>
+<script src="js/settings.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

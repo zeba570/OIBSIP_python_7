@@ -1,0 +1,133 @@
+/* ===== KEYFRAME ANIMATIONS ===== */
+ 
+@keyframes floatOrb {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-20px) scale(1.05); }
+}
+ 
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+ 
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+ 
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+ 
+@keyframes typingDot {
+  0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+  40% { transform: scale(1); opacity: 1; }
+}
+ 
+@keyframes pulse-green {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0,184,148,0.4); }
+  50% { box-shadow: 0 0 0 4px rgba(0,184,148,0); }
+}
+ 
+@keyframes pulse-scale {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+ 
+@keyframes ripple {
+  0% { transform: scale(0); opacity: 1; }
+  100% { transform: scale(4); opacity: 0; }
+}
+ 
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+ 
+@keyframes slideOutLeft {
+  from { opacity: 1; transform: translateX(0); }
+  to { opacity: 0; transform: translateX(-20px); }
+}
+ 
+/* ===== ENTRANCE ANIMATIONS ===== */
+.app { animation: fadeIn 0.4s ease; }
+.sidebar { animation: slideUp 0.4s ease 0.1s both; }
+.chat-window { animation: fadeIn 0.3s ease; }
+ 
+/* ===== HOVER MICRO-INTERACTIONS ===== */
+.room-item { transition: background 0.15s, transform 0.1s; }
+.room-item:hover { transform: translateX(3px); }
+.room-item.active { transform: translateX(3px); }
+ 
+.send-btn { position: relative; overflow: hidden; }
+.send-btn::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: rgba(255,255,255,0.2);
+  border-radius: inherit;
+  transform: scale(0);
+  transition: transform 0.3s;
+}
+.send-btn:active::after { transform: scale(2); opacity: 0; }
+ 
+/* ===== TOAST EXIT ===== */
+.toast.exiting { animation: slideOutLeft 0.3s ease forwards; }
+ 
+/* ===== MESSAGE HIGHLIGHT ===== */
+.msg-bubble.highlight {
+  animation: highlightFlash 0.8s ease;
+}
+@keyframes highlightFlash {
+  0%, 100% { background: var(--bg-card); }
+  50% { background: rgba(0,245,255,0.2); }
+}
+ 
+/* ===== AVATAR GLOW ON NEW MESSAGE ===== */
+.user-avatar.pulse {
+  animation: avatarPulse 0.5s ease;
+}
+@keyframes avatarPulse {
+  0% { box-shadow: 0 0 10px rgba(0,245,255,0.3); }
+  50% { box-shadow: 0 0 25px rgba(0,245,255,0.8); }
+  100% { box-shadow: 0 0 10px rgba(0,245,255,0.3); }
+}
+ 
+/* ===== LOADING SKELETON ===== */
+.skeleton {
+  background: linear-gradient(90deg, var(--bg-card) 25%, var(--bg-hover) 50%, var(--bg-card) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 8px;
+}
+ 
+/* ===== SCROLL-TRIGGERED REVEALS ===== */
+.msg-wrapper {
+  animation: slideUp 0.2s ease both;
+}
+ 
+/* Stagger children */
+.msg-wrapper:nth-child(1) { animation-delay: 0ms; }
+.msg-wrapper:nth-child(2) { animation-delay: 30ms; }
+.msg-wrapper:nth-child(3) { animation-delay: 60ms; }
+.msg-wrapper:nth-child(4) { animation-delay: 90ms; }
+.msg-wrapper:nth-child(5) { animation-delay: 120ms; }
+ 
+/* ===== AUTH CARD GLOW ===== */
+.auth-card {
+  animation: slideUp 0.5s ease, cardGlow 4s ease-in-out infinite;
+}
+@keyframes cardGlow {
+  0%, 100% { box-shadow: var(--shadow), 0 0 40px rgba(0,245,255,0.05); }
+  50% { box-shadow: var(--shadow), 0 0 60px rgba(0,245,255,0.12); }
+}
+ 
+/* ===== EMOJI PICKER OPEN ===== */
+.emoji-picker:not(.hidden) { animation: slideUp 0.2s ease; }
+ 
+/* ===== NOTIFICATION BADGE BOUNCE ===== */
+.unread-badge { animation: badgePop 0.3s cubic-bezier(0.34,1.56,0.64,1); }
+@keyframes badgePop {
+  from { transform: scale(0); }
+  to { transform: scale(1); }
+}
