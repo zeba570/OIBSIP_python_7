@@ -73,9 +73,8 @@ chat_application/
 ### Clone Repository
 
 ```bash
-git clone https://github.com/zeba570/chat_application.git
+git clone https://github.com/zeba570/OIBSIP_python_7.git
 ```
-
 ### Navigate to Project Folder
 
 ```bash
