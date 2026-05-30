@@ -73,7 +73,7 @@ chat_application/
 ### Clone Repository
 
 ```bash
-git clone https://github.com/zeba570/neonchat.git
+git clone https://github.com/zeba570/chat_application.git
 ```
 
 ### Navigate to Project Folder
@@ -140,7 +140,7 @@ This project helped me learn:
 
 # 👩‍💻 **Developer**
 
-**Zoya**
+**Zeba**
 
 Passionate Developer focused on building modern, user-friendly, and innovative web applications.
 
